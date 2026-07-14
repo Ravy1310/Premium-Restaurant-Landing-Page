@@ -20,7 +20,15 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navLinks = ["Home", "Menu", "About", "Gallery", "Testimonials", "Contact", "FAQ"];
+    const navItems = [
+        { label: "Home", href: "/" },
+        { label: "Menu", href: "/Menu" },
+        { label: "About", href: "/About" },
+        { label: "Gallery", href: "/gallery" },
+        { label: "Testimonials", href: "/#testimonials" },
+        { label: "Contact", href: "/#contact" },
+        { label: "FAQ", href: "/#faq" },
+    ];
 
     return (
         <header
@@ -29,19 +37,19 @@ export default function Navbar() {
         >
             <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-[1280px] flex items-center justify-between">
                 {/* Brand Logo */}
-                <Link href="#home" className="text-primary text-2xl font-bold font-playfair tracking-wide">
+                <Link href="/" className="text-primary text-2xl font-bold font-playfair tracking-wide">
                     Ember & Oak
                 </Link>
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-8">
-                    {navLinks.map((item) => (
+                    {navItems.map((item) => (
                         <Link
-                            key={item}
-                            href={`#${item.toLowerCase()}`}
+                            key={item.label}
+                            href={item.href}
                             className="group relative text-body hover:text-primary text-sm font-semibold font-inter transition-colors py-1"
                         >
-                            {item}
+                            {item.label}
                             {/* Animasi Garis Bawah */}
                             <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
                         </Link>
@@ -51,7 +59,7 @@ export default function Navbar() {
                 {/* Trailing Action (Desktop) */}
                 <div className="hidden md:block">
                     <Link
-                        href="#reservation"
+                        href="/#reservation"
                         className="group relative inline-flex h-10 items-center justify-center rounded-full bg-primary px-6 text-xs font-semibold uppercase tracking-widest text-white shadow-sm transition-all duration-300 hover:bg-primary/90 hover:shadow-md active:scale-95"
                     >
                         Reservation
@@ -71,19 +79,19 @@ export default function Navbar() {
             {/* Mobile Navigation Dropdown */}
             {isMobileMenuOpen && (
                 <div className="absolute top-[88px] left-0 w-full bg-white shadow-md border-t border-border flex flex-col md:hidden py-4">
-                    {navLinks.map((item) => (
+                    {navItems.map((item) => (
                         <Link
-                            key={item}
-                            href={`#${item.toLowerCase()}`}
+                            key={item.label}
+                            href={item.href}
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="px-6 py-3 text-body hover:text-primary hover:bg-stone-50 text-base font-semibold font-inter transition-colors"
                         >
-                            {item}
+                            {item.label}
                         </Link>
                     ))}
                     <div className="px-6 pt-4 pb-2">
                         <Link
-                            href="#reservation"
+                            href="/#reservation"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="flex h-10 w-full items-center justify-center rounded-full bg-primary px-6 text-xs font-semibold uppercase tracking-widest text-white shadow-sm transition-all duration-300 hover:bg-primary/90 active:scale-95"
                         >

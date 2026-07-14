@@ -1,12 +1,41 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Hero() {
+    const sectionRef = useRef<HTMLElement>(null);
+    const imageRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (!sectionRef.current || !imageRef.current) return;
+
+        const ctx = gsap.context(() => {
+            gsap.to(imageRef.current, {
+                y: 40,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true,
+                },
+            });
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
     return (
         <section
+            ref={sectionRef}
             id="home"
             className="relative w-full min-h-screen flex items-center pt-28 pb-16 overflow-hidden"
         >
@@ -52,15 +81,15 @@ export default function Hero() {
 
                     {/* Bagian Gambar (Kanan) */}
                     <motion.div
+                        ref={imageRef}
                         className="w-full md:w-1/2 flex justify-center md:justify-end"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
                     >
                         <div className="relative w-full max-w-[536px] aspect-[4/5] rounded-image overflow-hidden shadow-card">
-                            {/* Kita gunakan URL gambar dummy dari HTML asli Anda untuk sementara */}
                             <Image
-                                src="https://placehold.co/536x600/FAF7F2/8B4513?text=Hero+Image"
+                                src="/images/hero/Coffee Cookies.jpeg"
                                 alt="Ember & Oak Signature Dish"
                                 fill
                                 priority
@@ -71,6 +100,24 @@ export default function Hero() {
 
                 </div>
             </div>
+
+            {/* Scroll Indicator */}
+            <motion.div
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.8 }}
+            >
+                <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <ChevronDown className="w-6 h-6 text-primary/60" />
+                </motion.div>
+                <span className="text-[10px] text-primary/60 font-inter uppercase tracking-[0.2em]">
+                    Scroll to Explore
+                </span>
+            </motion.div>
         </section>
     );
 }

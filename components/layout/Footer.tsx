@@ -73,9 +73,22 @@ export default function Footer() {
                     <div className="flex flex-col gap-4">
                         <h3 className="text-heading text-xl font-bold font-playfair">Links</h3>
                         <div className="flex flex-col gap-2">
-                            {["Home", "Menu", "About", "Gallery", "Testimonials", "Reservation", "Contact", "FAQ"].map((link) => (
-                                <Link key={link} href={`#${link.toLowerCase()}`} className="hover:text-primary transition-colors text-base font-inter">
-                                    {link}
+                            {[
+                                { label: "Home", href: "/" },
+                                { label: "Menu", href: "/Menu" },
+                                { label: "About", href: "/About" },
+                                { label: "Gallery", href: "/#gallery" },
+                                { label: "Testimonials", href: "/#testimonials" },
+                                { label: "Reservation", href: "/#reservation" },
+                                { label: "Contact", href: "/#contact" },
+                                { label: "FAQ", href: "/#faq" },
+                            ].map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    className="hover:text-primary transition-colors text-base font-inter"
+                                >
+                                    {item.label}
                                 </Link>
                             ))}
                         </div>
