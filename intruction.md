@@ -48,9 +48,9 @@ Membuat project dengan struktur yang rapi.
 * Next.js (App Router)
 * TypeScript
 * Tailwind CSS
-- shadcn/ui
-- Framer Motion
-- Lucide React
+* shadcn/ui
+* Framer Motion
+* Lucide React
 
 ---
 
@@ -80,10 +80,10 @@ utils/
 
 ## Success Criteria
 
-- Project dapat dijalankan.
-- Tidak ada error.
-- Tailwind berjalan.
-- shadcn berhasil diinstall.
+* Project dapat dijalankan.
+* Tidak ada error.
+* Tailwind berjalan.
+* shadcn berhasil diinstall.
 
 ---
 
