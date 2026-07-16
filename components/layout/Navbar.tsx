@@ -25,9 +25,9 @@ export default function Navbar() {
         { label: "Menu", href: "/Menu" },
         { label: "About", href: "/About" },
         { label: "Gallery", href: "/gallery" },
-        { label: "Testimonials", href: "/#testimonials" },
-        { label: "Contact", href: "/#contact" },
-        { label: "FAQ", href: "/#faq" },
+        { label: "Testimonials", href: "/testimonials" },
+        { label: "Contact", href: "/contact" },
+        { label: "FAQ", href: "/faq" },
     ];
 
     return (
@@ -59,7 +59,7 @@ export default function Navbar() {
                 {/* Trailing Action (Desktop) */}
                 <div className="hidden md:block">
                     <Link
-                        href="/#reservation"
+                        href="/reservation"
                         className="group relative inline-flex h-10 items-center justify-center rounded-full bg-primary px-6 text-xs font-semibold uppercase tracking-widest text-white shadow-sm transition-all duration-300 hover:bg-primary/90 hover:shadow-md active:scale-95"
                     >
                         Reservation

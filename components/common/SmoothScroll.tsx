@@ -15,9 +15,12 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             smoothWheel: true,
         });
 
-        if (typeof window !== "undefined" && !window.location.hash) {
-            window.scrollTo(0, 0);
-            lenis.scrollTo(0, { immediate: true });
+        if (typeof window !== "undefined") {
+            (window as any).lenis = lenis;
+            if (!window.location.hash) {
+                window.scrollTo(0, 0);
+                lenis.scrollTo(0, { immediate: true });
+            }
         }
 
         lenis.on("scroll", ScrollTrigger.update);
@@ -32,6 +35,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         return () => {
             gsap.ticker.remove(ticker);
             lenis.destroy();
+            if (typeof window !== "undefined") {
+                delete (window as any).lenis;
+            }
         };
     }, []);
 

@@ -30,8 +30,15 @@ export default function MenuPage() {
         const element = document.getElementById(id);
         if (element) {
             const yOffset = -160;
-            const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-            window.scrollTo({ top: y, behavior: "smooth" });
+            if (typeof window !== "undefined" && typeof (window as any).lenis?.scrollTo === "function") {
+                (window as any).lenis.scrollTo(element, {
+                    offset: yOffset,
+                    duration: 1.2,
+                });
+            } else {
+                const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+                window.scrollTo({ top: y, behavior: "smooth" });
+            }
             window.history.pushState(null, "", `#${id}`);
         }
     };

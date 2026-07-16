@@ -77,11 +77,11 @@ export default function Footer() {
                                 { label: "Home", href: "/" },
                                 { label: "Menu", href: "/Menu" },
                                 { label: "About", href: "/About" },
-                                { label: "Gallery", href: "/#gallery" },
-                                { label: "Testimonials", href: "/#testimonials" },
-                                { label: "Reservation", href: "/#reservation" },
-                                { label: "Contact", href: "/#contact" },
-                                { label: "FAQ", href: "/#faq" },
+                                { label: "Gallery", href: "/gallery" },
+                                { label: "Testimonials", href: "/testimonials" },
+                                { label: "Reservation", href: "/reservation" },
+                                { label: "Contact", href: "/contact" },
+                                { label: "FAQ", href: "/faq" },
                             ].map((item) => (
                                 <Link
                                     key={item.label}

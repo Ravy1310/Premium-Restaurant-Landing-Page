@@ -16,8 +16,12 @@ export default function MenuNav({ onSelectCategory }: MenuNavProps) {
                         <li key={`nav-${section.id}`}>
                             <button
                                 type="button"
+                                onPointerDown={(e) => {
+                                    if (e.button !== 0) return;
+                                    onSelectCategory(section.id);
+                                }}
                                 onClick={() => onSelectCategory(section.id)}
-                                className="text-body hover:text-primary text-sm font-semibold font-inter transition-colors relative group py-1 cursor-pointer"
+                                className="text-body hover:text-primary text-sm font-semibold font-inter transition-colors relative group py-1 cursor-pointer select-none"
                             >
                                 {section.category}
                                 <span className="absolute left-0 bottom-[-16px] w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
