@@ -1,592 +1,150 @@
----
-trigger: always_on
----
+Product Requirements Document (PRD)
+Project: Ember & Oak Admin Panel (CMS)
+Version: 1.0
+Status: Draft
 
-# Product Requirements Document (PRD)
+1. Latar Belakang
+Website Ember & Oak saat ini berupa landing page statis. Setiap ada perubahan harga menu, penambahan foto galeri baru, atau pembaruan jam operasional, pihak restoran harus menghubungi developer untuk mengubah kode. Untuk operasional restoran yang bergerak cepat, hal ini sangat tidak efisien. Dibutuhkan sebuah Admin Panel (CMS) agar pihak manajemen dapat mengedit konten secara mandiri, real-time, tanpa perlu pengetahuan coding.
 
-# Ember & Oak — Premium Restaurant Landing Page
+2. Tujuan Produk
+Menyediakan dashboard yang aman (membutuhkan login) bagi pihak manajemen restoran.
 
-**Version:** 1.0
-**Status:** Draft
-**Author:** Rafi Isnanto Syahlefi
-**Project Type:** Marketing Website / Restaurant Landing Page
+Memungkinkan kustomisasi mandiri untuk seluruh teks, gambar, dan data di Landing Page.
 
----
+Menyediakan antarmuka untuk melihat dan mengelola data Reservasi dan Pesan (Contact) yang masuk dari pengunjung.
 
-# 1. Latar Belakang
+3. Asumsi & Batasan
+Asumsi: Admin Panel ini akan dibangun dalam satu codebase (Monorepo) yang sama dengan Landing Page Next.js saat ini, memanfaatkan Server Components dan Server Actions.
 
-Ember & Oak adalah restoran premium yang menawarkan pengalaman fine dining untuk pasangan, keluarga, wisatawan, dan pelanggan bisnis.
+Database: Membutuhkan database (misal: PostgreSQL dengan Prisma/Drizzle ORM, atau Supabase/Firebase) untuk menyimpan data dinamis.
 
-Saat ini informasi restoran masih tersebar di berbagai platform seperti Instagram, WhatsApp, dan Google Maps. Pelanggan harus menghubungi restoran secara manual untuk melihat menu, menanyakan ketersediaan meja, atau melakukan reservasi.
+Autentikasi: Menggunakan NextAuth.js atau Supabase Auth untuk mengamankan route /admin.
 
-Proses tersebut sering menyebabkan:
+Penyimpanan Media: Membutuhkan layanan cloud storage (seperti AWS S3, Cloudinary, atau Vercel Blob) untuk menyimpan unggahan gambar.
 
-* Balasan reservasi lambat.
-* Kesalahan pencatatan reservasi.
-* Informasi yang tidak konsisten.
-* Calon pelanggan kehilangan minat karena proses yang kurang praktis.
+4. Detail Modul & Fitur (Arsitektur Menu)
+Admin Panel akan memiliki Sidebar navigasi di sebelah kiri. Berikut adalah detail menu dan fungsinya:
 
-Oleh karena itu diperlukan sebuah website resmi yang menjadi pusat informasi restoran sekaligus memudahkan pelanggan melakukan reservasi.
+📊 1. Modul Dashboard (/admin)
+Halaman ringkasan saat Admin pertama kali login.
 
----
+Fitur Utama:
 
-# 2. Problem Statement
+Kartu Statistik: Total Reservasi Baru, Total Pesan Masuk, Jumlah Menu Aktif.
 
-Pelanggan mengalami kesulitan mendapatkan informasi restoran secara cepat karena informasi tersebar di berbagai platform dan proses reservasi masih dilakukan secara manual melalui WhatsApp atau telepon.
+Recent Activity: Menampilkan 5 reservasi atau pesan terakhir yang masuk.
 
-Hal ini mengurangi kenyamanan pelanggan dan berpotensi menurunkan jumlah reservasi.
+Grafik Sederhana (Opsional): Tren reservasi 7 hari terakhir.
 
----
+🏠 2. Modul Content Management
+Modul utama untuk mengatur elemen Landing Page. Modul ini dipecah berdasarkan section:
 
-# 3. Tujuan Produk
+A. Hero Section (/admin/hero)
 
-Membangun website restoran premium yang mampu:
+Fitur Utama: Form untuk mengedit Judul Utama (Heading), Sub-judul (Description), Label Kategori (misal: "Fine Dining Experience"), Teks Tombol CTA, dan Upload/Ganti Gambar Background Hero.
 
-* Menampilkan identitas restoran secara profesional.
-* Memudahkan pelanggan melihat menu.
-* Menampilkan suasana restoran melalui galeri.
-* Mempermudah proses reservasi.
-* Meningkatkan jumlah reservasi online.
+B. About Section (/admin/about)
 
----
+Fitur Utama: Text Editor (WYSIWYG) untuk mengubah cerita/filosofi restoran, form untuk mengedit Nama Chef & Profil singkat, dan mengatur angka statistik (misal: "10+ Years of Excellence").
 
-# 4. Target Pengguna
+C. Menu Management (/admin/menu)
 
-## Primary User
+Fitur Utama:
 
-Calon pelanggan yang:
+Manajemen Kategori: Tambah, edit, hapus, dan atur urutan kategori menu (Cuisine, Drinks, Desserts).
 
-* Mencari restoran premium.
-* Ingin melihat menu sebelum datang.
-* Ingin melihat suasana restoran.
-* Ingin melakukan reservasi secara online.
+Manajemen Item: CRUD (Create, Read, Update, Delete) hidangan. Input meliputi: Nama Menu, Harga, Deskripsi, Upload Foto, dan Tag (misal: New, Signature, Spicy).
 
-## Secondary User
+Fitur Toggle Visibility: Menyembunyikan menu tertentu jika bahan sedang kosong.
 
-Pelanggan lama yang ingin:
+D. Gallery Management (/admin/gallery)
 
-* Melakukan reservasi ulang.
-* Melihat menu terbaru.
-* Mengetahui promo terbaru.
+Fitur Utama:
 
----
+Upload multiple images.
 
-# 5. User Persona
+Menetapkan kategori filter untuk setiap foto (All, Atmosphere, Cuisine, dll).
 
-## Persona
+Menghapus foto lama atau mengatur foto mana yang di-pin di halaman depan.
 
-**Nama**
+E. Testimonials (/admin/testimonials)
 
-Sarah Wijaya
+Fitur Utama:
 
-**Umur**
+Menambah testimoni baru secara manual.
 
-29 Tahun
+Form input: Nama Tamu, Tanggal, Rating Bintang (1-5), Teks Ulasan, dan Inisial/Warna background avatar.
 
-**Pekerjaan**
+Fitur Featured: Memilih 1 ulasan untuk dijadikan kutipan besar (Hero Testimonial).
 
-Marketing Manager
+F. FAQ Management (/admin/faq)
 
-**Goals**
+Fitur Utama: CRUD Pertanyaan dan Jawaban. Mengelompokkan FAQ berdasarkan kategori (Reservasi, General, dll).
 
-* Menemukan restoran premium.
-* Reservasi dengan cepat.
-* Mengetahui harga sebelum datang.
+G. Contact & Footer (/admin/contact)
 
-**Pain Points**
+Fitur Utama: Form untuk mengupdate Alamat Restoran, Nomor Telepon, Email, Jam Operasional per hari, serta tautan (URL) Sosial Media.
 
-* Sulit melihat menu.
-* Harus chat WhatsApp hanya untuk bertanya.
-* Tidak tahu suasana restoran.
+📅 3. Modul Inbox & Operations
+A. Reservations (/admin/reservations)
 
----
+Fitur Utama: Tabel data interaktif menampilkan input dari form "Secure Your Table". Kolom meliputi: Nama, Email, Tanggal, Jam, Jumlah Tamu, Spesial Request.
 
-# 6. Product Goals
+Action: Mengubah status reservasi (Pending, Confirmed, Cancelled, Completed).
 
-Website harus mampu membuat pengunjung:
+B. Contact Messages (/admin/messages)
 
-1. Mengenal restoran.
-2. Melihat menu.
-3. Percaya terhadap kualitas restoran.
-4. Melakukan reservasi.
+Fitur Utama: Kotak masuk (Inbox) untuk membaca pesan yang dikirim pengunjung melalui form "Send an Inquiry".
 
----
+⚙️ 4. Modul Settings (/admin/settings)
+Fitur Utama: Pengaturan SEO (Title Tag, Meta Description global), upload Favicon, dan manajemen akses akun Admin (ubah password).
 
-# 7. Success Metrics
-
-Keberhasilan website diukur dari:
-
-* Jumlah reservasi online meningkat.
-* Pengunjung membuka halaman menu.
-* Pengunjung melihat galeri.
-* Pengunjung menghubungi restoran.
-* Bounce rate menurun.
-
----
-
-# 8. User Journey
-
-```
-Landing Page
-
-↓
-
-Hero Section
-
-↓
-
-Melihat Menu
-
-↓
-
-Melihat Gallery
-
-↓
-
-Membaca Testimoni
-
-↓
-
-Melakukan Reservasi
-
-↓
-
-Reservasi Berhasil
-```
-
----
-
-# 9. Functional Requirements
-
-## 9.1 Navbar
-
-### Tujuan
-
-Navigasi cepat menuju seluruh section.
-
-### Fitur
-
-* Logo
-* Home
-* Menu
-* About
-* Gallery
-* Reservation
-* Contact
-* Sticky Navbar
-* Mobile Menu
-
----
-
-## 9.2 Hero Section
-
-### Menampilkan
-
-* Headline
-* Deskripsi restoran
-* CTA Reserve Table
-* CTA View Menu
-
----
-
-## 9.3 Digital Menu
-
-### Menampilkan
-
-* Foto makanan
-* Nama menu
-* Deskripsi
-* Harga
-* Rating
-* Kategori
-
-Kategori:
-
-* Appetizer
-* Main Course
-* Dessert
-* Beverages
-
----
-
-## 9.4 Gallery
-
-Menampilkan:
-
-* Foto makanan
-* Interior restoran
-* Suasana restoran
-
-Gallery menggunakan grid responsive.
-
----
-
-## 9.5 About
-
-Berisi:
-
-* Cerita restoran
-* Filosofi
-* Statistik
-
-Contoh statistik:
-
-* 10+ Years Experience
-* 500+ Happy Customers
-* 50+ Signature Dishes
-
----
-
-## 9.6 Testimonial
-
-Menampilkan review pelanggan.
-
-Isi:
-
-* Nama
-* Foto
-* Rating
-* Review
-
----
-
-## 9.7 Reservation Form
-
-Field:
-
-* Nama
-* Email
-* Nomor Telepon
-* Tanggal
-* Waktu
-* Jumlah Tamu
-
-Validasi:
-
-* Semua field wajib diisi.
-* Format email valid.
-* Nomor telepon valid.
-
-Setelah submit:
-
-* Menampilkan pesan sukses.
-* (Level 1) Data belum disimpan ke database.
-
----
-
-## 9.8 FAQ
-
-Accordion berisi pertanyaan umum.
-
-Contoh:
-
-* Apakah harus reservasi?
-* Apakah menerima acara ulang tahun?
-* Jam operasional?
-* Apakah tersedia area parkir?
-
----
-
-## 9.9 Contact
-
-Menampilkan:
-
-* Alamat
-* Nomor Telepon
-* Email
-* Jam Operasional
-* Google Maps
-
----
-
-## 9.10 Footer
-
-Berisi:
-
-* Logo
-* Copyright
-* Quick Links
-* Social Media
-
----
-
-# 10. Non Functional Requirements
-
-Website harus:
-
-* Responsive
-* Cepat dibuka
-* SEO Friendly
-* Accessible
-* Mobile First
-* Cross Browser
-
-Target Lighthouse
-
-Performance ≥ 95
-
-Accessibility ≥ 95
-
-Best Practice ≥ 95
-
-SEO ≥ 95
-
----
-
-# 11. Design Requirements
-
-Konsep:
-
-Modern
-
-Elegant
-
-Luxury
-
-Warm
-
-Minimalist
-
-Warna:
-
-Background
-
-```
-#FAF7F2
-```
-
-Primary
-
-```
-#8B4513
-```
-
-Secondary
-
-```
-#D4A373
-```
-
-Typography
-
-Heading
-
-Playfair Display
-
-Body
-
-Inter
-
----
-
-# 12. Call To Action
-
-Primary CTA
-
-Reserve Table
-
-Secondary CTA
-
-View Menu
-
----
-
-# 13. Structur Folder 
-ember-and-oak/
-│
-├── app/
-│   ├── (marketing)/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+5. Struktur Folder (Next.js App Router)
+Agar codebase tetap bersih dan memisahkan ranah Public (pengunjung) dan Private (Admin), kita akan menggunakan fitur Route Groups (...) di Next.js.
+
+Plaintext
+📦 ember-and-oak
+├── 📂 app
+│   ├── 📂 (public)                 # Membungkus SEMUA halaman landing page saat ini
+│   │   ├── 📂 about
+│   │   ├── 📂 menu
+│   │   ├── 📄 layout.tsx           # Public Layout (Navbar & Footer Landing Page)
+│   │   └── 📄 page.tsx             # Halaman Utama
 │   │
-│   ├── api/
+│   ├── 📂 (admin)                  # Membungkus SEMUA halaman khusus Admin
+│   │   ├── 📂 login                # Halaman Login Admin
+│   │   │   └── 📄 page.tsx
+│   │   └── 📂 admin                # Route /admin/... (Dilindungi oleh Middleware)
+│   │       ├── 📄 layout.tsx       # Admin Layout (Sidebar & Topbar khusus Admin)
+│   │       ├── 📄 page.tsx         # /admin (Dashboard Utama)
+│   │       ├── 📂 hero
+│   │       ├── 📂 menu             # Halaman tabel manajemen menu
+│   │       │   ├── 📄 page.tsx
+│   │       │   └── 📂 [id]         # Halaman Edit menu spesifik
+│   │       ├── 📂 gallery
+│   │       ├── 📂 reservations
+│   │       └── 📂 settings
 │   │
-│   ├── globals.css
-│   ├── favicon.ico
-│   ├── layout.tsx
-│   └── not-found.tsx
+│   ├── 📂 api                      # REST API / Server Actions untuk CRUD ke database
+│   └── 📄 middleware.ts            # Memblokir akses ke /admin jika belum login
 │
-├── components/
-│   │
-│   ├── common/
-│   │   ├── Container.tsx
-│   │   ├── Section.tsx
-│   │   ├── Button.tsx
-│   │   ├── Heading.tsx
-│   │   ├── Badge.tsx
-│   │   ├── Card.tsx
-│   │   ├── Input.tsx
-│   │   └── Loading.tsx
-│   │
-│   ├── layout/
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   └── MobileMenu.tsx
-│   │
-│   ├── sections/
-│   │   ├── Hero/
-│   │   │   ├── Hero.tsx
-│   │   │   ├── HeroImage.tsx
-│   │   │   └── HeroContent.tsx
-│   │   │
-│   │   ├── FeaturedMenu/
-│   │   │   ├── FeaturedMenu.tsx
-│   │   │   ├── MenuCard.tsx
-│   │   │   └── MenuPrice.tsx
-│   │   │
-│   │   ├── About/
-│   │   │   ├── About.tsx
-│   │   │   ├── Stats.tsx
-│   │   │   └── Story.tsx
-│   │   │
-│   │   ├── Gallery/
-│   │   │   ├── Gallery.tsx
-│   │   │   └── GalleryCard.tsx
-│   │   │
-│   │   ├── Testimonials/
-│   │   │   ├── Testimonials.tsx
-│   │   │   └── TestimonialCard.tsx
-│   │   │
-│   │   ├── Reservation/
-│   │   │   ├── Reservation.tsx
-│   │   │   └── ReservationForm.tsx
-│   │   │
-│   │   ├── FAQ/
-│   │   │   ├── FAQ.tsx
-│   │   │   └── FAQItem.tsx
-│   │   │
-│   │   └── Contact/
-│   │       ├── Contact.tsx
-│   │       ├── ContactInfo.tsx
-│   │       └── Map.tsx
-│   │
-│   └── ui/
-│       └── shadcn components
+├── 📂 components
+│   ├── 📂 admin                    # Komponen khusus untuk Admin Panel
+│   │   ├── 📂 layout               # SidebarAdmin.tsx, TopbarAdmin.tsx
+│   │   ├── 📂 forms                # FormMenu.tsx, FormHero.tsx, UploadImage.tsx
+│   │   └── 📂 ui                   # Reusable UI (Tabel, Modal, Toast)
+│   └── 📂 sections                 # (Komponen Landing page saat ini tetap di sini)
 │
-├── data/
-│   ├── menu.ts
-│   ├── testimonials.ts
-│   ├── faq.ts
-│   ├── gallery.ts
-│   └── statistics.ts
+├── 📂 lib
+│   ├── 📂 db                       # Setup koneksi Database (Prisma/Drizzle)
+│   ├── 📂 auth                     # Setup NextAuth.js
+│   └── 📂 utils                    # Helper functions format tanggal, upload gambar, dll
 │
-├── hooks/
-│   ├── useScroll.ts
-│   ├── useMediaQuery.ts
-│   └── useNavbar.ts
-│
-├── lib/
-│   ├── constants.ts
-│   ├── navigation.ts
-│   ├── metadata.ts
-│   └── utils.ts
-│
-├── services/
-│   └── reservation.service.ts
-│
-├── types/
-│   ├── menu.ts
-│   ├── reservation.ts
-│   ├── testimonial.ts
-│   └── faq.ts
-│
-├── public/
-│   │
-│   ├── images/
-│   │   ├── hero/
-│   │   ├── menu/
-│   │   ├── gallery/
-│   │   ├── restaurant/
-│   │   └── testimonials/
-│   │
-│   ├── icons/
-│   │
-│   └── logo/
-│
-├── styles/
-│   └── animations.css
-│
-├── docs/
-│   ├── PRD.md
-│   ├── DESAIN.md
-│   ├── INSTRUCTION.md
-│   └── CHANGELOG.md
-│
-├── .env.example
-├── components.json
-├── next.config.ts
-├── package.json
-├── postcss.config.mjs
-├── tailwind.config.ts
-├── tsconfig.json
-└── README.md
----
+└── 📂 prisma                       # (Jika pakai Prisma) Schema database
+    └── 📄 schema.prisma
+Penjelasan Struktur:
+Route Groups (public) dan (admin): Tanda kurung tidak akan memengaruhi URL. URL tetap akan menjadi namarestoran.com/menu dan namarestoran.com/admin. Namun, ini memungkinkan kita memiliki dua layout.tsx yang sangat berbeda (satu untuk desain elegan pengunjung, satu lagi berbentuk dasbor kerja untuk staf).
 
-# 14. Konten yang Disediakan
+Komponen Dipisah: Komponen pengunjung (components/sections) tidak bercampur dengan komponen admin (components/admin), mencegah bundle size membengkak di sisi pengguna.
 
-Owner menyediakan:
-
-* Logo
-* Foto makanan
-* Foto restoran
-* Menu
-* Harga
-* Testimoni
-* Lokasi
-* Jam operasional
-
----
-
-# 15. Out of Scope (Versi 1)
-
-Fitur berikut **tidak** termasuk pada versi pertama:
-
-* Login pengguna
-* Dashboard admin
-* CMS untuk mengelola menu
-* Pembayaran online
-* Penyimpanan reservasi ke database
-* Integrasi WhatsApp API
-* Sistem loyalitas pelanggan
-* Multi bahasa
-
----
-
-# 16. Future Enhancements
-
-Versi berikutnya akan menambahkan:
-
-* Dashboard Admin
-* CMS Menu
-* Reservasi tersimpan ke database
-* Riwayat reservasi
-* Promo dinamis
-* Blog restoran
-* Newsletter
-* Dark Mode
-* Favorite Menu
-* Search Menu
-* Filter Menu
-* Integrasi Google Reviews
-* Instagram Feed
-
----
-
-# 17. Definition of Done
-
-Project dianggap selesai apabila:
-
-* Semua section berhasil diimplementasikan.
-* Responsive pada desktop, tablet, dan mobile.
-* Navigasi berjalan dengan baik.
-* Form reservasi memiliki validasi.
-* CTA berfungsi.
-* Google Maps dapat ditampilkan.
-* Website lolos pengujian dasar pada browser modern.
-* Siap di-deploy ke Vercel.
-
----
-
-# 18. Ringkasan
-
-Website **Ember & Oak** dirancang sebagai landing page restoran premium yang berfokus pada **meningkatkan reservasi online**, memberikan informasi yang jelas, serta membangun citra restoran yang elegan dan profesional. Pada versi pertama, fokus utama adalah menghadirkan pengalaman pengguna yang cepat, mudah, dan meyakinkan, sehingga pengunjung terdorong untuk melihat menu, mengenal restoran, dan melakukan reservasi. Setelah fondasi ini selesai, versi berikutnya dapat dikembangkan menjadi website yang lebih dinamis dengan dashboard admin, CMS, dan fitur-fitur bisnis lainnya.
+Database (/lib/db): Kita wajib mengimplementasikan struktur tabel yang akan mendistribusikan data ke Landing Page secara dinamis.
